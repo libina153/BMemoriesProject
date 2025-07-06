@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Happy Birthday Love</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
@@ -48,7 +48,7 @@
     }
   </style>
 </head>
-<body class="bg-blue-500 min-h-screen flex items-center justify-center overflow-hidden relative">
+<body class="bg-blue-500 min-h-screen flex flex-col items-center justify-center overflow-hidden relative">
 
   <!-- Floating Heart Balloons -->
   <div class="absolute inset-0 pointer-events-none z-10">
@@ -74,7 +74,7 @@
   </div>
 
   <!-- Birthday Card -->
-  <div class="relative z-20 bg-white/90 rounded-3xl shadow-2xl p-10 w-96 text-center">
+  <div class="relative z-20 bg-white/90 rounded-3xl shadow-2xl p-6 sm:p-8 w-[90%] max-w-md text-center mx-auto overflow-hidden">
     <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center opacity-10 rounded-3xl z-10"></div>
 
     <div class="relative z-20">
@@ -82,74 +82,55 @@
         🎂
       </div>
 
-      <h1 class="text-4xl text-pink-600 birthday-font mb-4">
+      <h1 class="text-3xl sm:text-4xl text-pink-600 birthday-font mb-4 leading-snug">
         💖 Happy Birthday Love 💕🎈
       </h1>
 
-      <p class="text-base text-gray-700 mb-6">
+      <p class="text-sm sm:text-base text-gray-700 mb-6 leading-relaxed">
         🎂 Wishing you the sweetest moments,<br>
         the brightest smiles, and the happiest memories today and always! 🎉
       </p>
 
       <button id="surpriseBtn" class="mt-4 bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 shadow-md">
-      🎁
+        🎁 
       </button>
     </div>
   </div>
 
   <!-- Popup Modal -->
-  <div id="popup" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
-    <div class="bg-white rounded-2xl shadow-xl p-6 text-center popup-animate max-w-xl w-full relative">
-
-      <!-- Cake Emoji -->
+  <div id="popup" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center overflow-y-auto p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-xl p-4 sm:p-6 popup-animate relative text-center">
       <div class="text-6xl mb-4">🎂</div>
 
-      <!-- Quote -->
-      <p id="birthdayQuote" class="text-pink-600 italic font-medium mb-6 px-4 leading-relaxed">
+      <p id="birthdayQuote" class="text-pink-600 italic font-medium mb-6 leading-relaxed text-sm sm:text-base px-2 sm:px-6">
         "On your special day, I wish I could wrap my arms around you and shower you with kisses. <br/>
         Until then, know that you're cherished beyond measure. <br/>
         <span class="font-semibold">Happy birthday, my love.</span>"
       </p>
 
-      <!-- Image / Heart Content -->
-      <div id="carouselContent" class="transition duration-300">
-        <img id="carouselImage" src="" alt="Memory Photo" class="w-full max-h-96 object-contain bg-white rounded-lg shadow mb-4" />
-      </div>
+      <div id="carouselContent" class="transition duration-300"></div>
 
-      <!-- Navigation Buttons -->
-      <div id="navButtons" class="flex justify-end gap-4 mt-4">
+      <div id="navButtons" class="flex justify-center flex-wrap gap-4 mt-4">
         <button id="prevPhoto" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-full shadow">Prev</button>
         <button id="nextPhoto" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full shadow">Next</button>
       </div>
 
-      <button id="closePopup" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">&times;</button>
+      <button id="closePopup" class="absolute top-3 right-4 text-gray-500 hover:text-red-600 text-xl">&times;</button>
     </div>
   </div>
 
-  <!-- JavaScript -->
   <script>
     const surpriseBtn = document.getElementById("surpriseBtn");
     const popup = document.getElementById("popup");
     const closePopup = document.getElementById("closePopup");
     const carouselContent = document.getElementById("carouselContent");
-    const carouselImage = document.getElementById("carouselImage");
     const nextPhoto = document.getElementById("nextPhoto");
     const prevPhoto = document.getElementById("prevPhoto");
     const navButtons = document.getElementById("navButtons");
     const birthdayQuote = document.getElementById("birthdayQuote");
 
-    const mainImages = [
-      "./p2.png",
-      "./p3.jpg",
-      "./p4.jpg"
-    ];
-
-    const extraImages = [
-      "./p6.jpg",
-      "./p7.jpg",
-      "./p8.jpg"
-    ];
-
+    const mainImages = ["/p2.png", "/p3.jpg", "/p4.jpg"];
+    const extraImages = ["/p6.jpg", "/p7.jpg", "/p8.jpg"];
     const allImages = [...mainImages, ...extraImages];
     let currentIndex = 0;
 
@@ -173,13 +154,15 @@
         `;
         carouselContent.appendChild(heartDiv);
       } else {
-        const isExtra = currentIndex >= mainImages.length;
-        birthdayQuote.classList.toggle("hidden", isExtra);
+        birthdayQuote.classList.toggle("hidden", currentIndex >= mainImages.length);
         navButtons.classList.remove("hidden");
         prevPhoto.classList.toggle("hidden", currentIndex === 0);
 
-        carouselImage.src = allImages[currentIndex];
-        carouselContent.appendChild(carouselImage);
+        const img = document.createElement("img");
+        img.src = allImages[currentIndex];
+        img.alt = "Memory Photo";
+        img.className = "w-full max-h-[60vh] object-contain bg-white rounded-lg shadow mb-4";
+        carouselContent.appendChild(img);
       }
     }
 
@@ -207,6 +190,5 @@
       }
     });
   </script>
-
 </body>
 </html>
