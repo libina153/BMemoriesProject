@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Love</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    .birthday-font {
+      font-family: 'Great Vibes', cursive;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) translateX(0) scale(1); opacity: 1; }
+      50% { transform: translateY(-10vh) translateX(10px) scale(1.1); }
+      100% { transform: translateY(-120vh) translateX(-10px) scale(1.2); opacity: 0; }
+    }
+
+    .heart-balloon {
+      position: absolute;
+      bottom: -60px;
+      width: 32px;
+      height: 32px;
+      animation: floatUp linear infinite;
+      z-index: 10;
+    }
+
+    @keyframes popupShow {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup-animate {
+      animation: popupShow 0.5s ease-out forwards;
+    }
+
+    .beating-heart {
+      width: 100px;
+      height: 100px;
+      animation: beat 1s infinite;
+      margin: auto;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+  </style>
+</head>
+<body class="bg-blue-500 min-h-screen flex items-center justify-center overflow-hidden relative">
+
+  <!-- Floating Heart Balloons -->
+  <div class="absolute inset-0 pointer-events-none z-10">
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        for (let i = 0; i < 30; i++) {
+          const heart = document.createElement('div');
+          heart.className = 'heart-balloon';
+          heart.style.left = Math.random() * 100 + '%';
+          heart.style.animationDelay = (Math.random() * 5).toFixed(1) + 's';
+          heart.style.animationDuration = (5 + Math.random() * 3).toFixed(1) + 's';
+          heart.innerHTML = `<svg viewBox="0 0 24 24" fill="#8B0000" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                     2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 
+                     4.5 2.09C13.09 3.81 14.76 3 16.5 
+                     3 19.58 3 22 5.42 22 8.5c0 
+                     3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>`;
+          document.body.querySelector('.inset-0').appendChild(heart);
+        }
+      });
+    </script>
+  </div>
+
+  <!-- Birthday Card -->
+  <div class="relative z-20 bg-white/90 rounded-3xl shadow-2xl p-10 w-96 text-center">
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center opacity-10 rounded-3xl z-10"></div>
+
+    <div class="relative z-20">
+      <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-pink-200 border-4 border-pink-500 flex items-center justify-center text-4xl shadow-lg">
+        🎂
+      </div>
+
+      <h1 class="text-4xl text-pink-600 birthday-font mb-4">
+        💖 Happy Birthday Love 💕🎈
+      </h1>
+
+      <p class="text-base text-gray-700 mb-6">
+        🎂 Wishing you the sweetest moments,<br>
+        the brightest smiles, and the happiest memories today and always! 🎉
+      </p>
+
+      <button id="surpriseBtn" class="mt-4 bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 shadow-md">
+      🎁
+      </button>
+    </div>
+  </div>
+
+  <!-- Popup Modal -->
+  <div id="popup" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-xl p-6 text-center popup-animate max-w-xl w-full relative">
+
+      <!-- Cake Emoji -->
+      <div class="text-6xl mb-4">🎂</div>
+
+      <!-- Quote -->
+      <p id="birthdayQuote" class="text-pink-600 italic font-medium mb-6 px-4 leading-relaxed">
+        "On your special day, I wish I could wrap my arms around you and shower you with kisses. <br/>
+        Until then, know that you're cherished beyond measure. <br/>
+        <span class="font-semibold">Happy birthday, my love.</span>"
+      </p>
+
+      <!-- Image / Heart Content -->
+      <div id="carouselContent" class="transition duration-300">
+        <img id="carouselImage" src="" alt="Memory Photo" class="w-full max-h-96 object-contain bg-white rounded-lg shadow mb-4" />
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div id="navButtons" class="flex justify-end gap-4 mt-4">
+        <button id="prevPhoto" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-full shadow">Prev</button>
+        <button id="nextPhoto" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full shadow">Next</button>
+      </div>
+
+      <button id="closePopup" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">&times;</button>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const surpriseBtn = document.getElementById("surpriseBtn");
+    const popup = document.getElementById("popup");
+    const closePopup = document.getElementById("closePopup");
+    const carouselContent = document.getElementById("carouselContent");
+    const carouselImage = document.getElementById("carouselImage");
+    const nextPhoto = document.getElementById("nextPhoto");
+    const prevPhoto = document.getElementById("prevPhoto");
+    const navButtons = document.getElementById("navButtons");
+    const birthdayQuote = document.getElementById("birthdayQuote");
+
+    const mainImages = [
+      "/p2.png",
+      "/p3.jpg",
+      "/p4.jpg"
+    ];
+
+    const extraImages = [
+      "/p6.jpg",
+      "/p7.jpg",
+      "/p8.jpg"
+    ];
+
+    const allImages = [...mainImages, ...extraImages];
+    let currentIndex = 0;
+
+    function updateContent() {
+      carouselContent.innerHTML = "";
+
+      if (currentIndex >= allImages.length) {
+        birthdayQuote.classList.add("hidden");
+        navButtons.classList.add("hidden");
+
+        const heartDiv = document.createElement("div");
+        heartDiv.className = "beating-heart";
+        heartDiv.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="red" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                     2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 
+                     4.5 2.09C13.09 3.81 14.76 3 16.5 
+                     3 19.58 3 22 5.42 22 8.5c0 
+                     3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        `;
+        carouselContent.appendChild(heartDiv);
+      } else {
+        const isExtra = currentIndex >= mainImages.length;
+        birthdayQuote.classList.toggle("hidden", isExtra);
+        navButtons.classList.remove("hidden");
+        prevPhoto.classList.toggle("hidden", currentIndex === 0);
+
+        carouselImage.src = allImages[currentIndex];
+        carouselContent.appendChild(carouselImage);
+      }
+    }
+
+    surpriseBtn.addEventListener("click", () => {
+      currentIndex = 0;
+      updateContent();
+      popup.classList.remove("hidden");
+    });
+
+    closePopup.addEventListener("click", () => {
+      popup.classList.add("hidden");
+    });
+
+    nextPhoto.addEventListener("click", () => {
+      if (currentIndex <= allImages.length) {
+        currentIndex++;
+        updateContent();
+      }
+    });
+
+    prevPhoto.addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateContent();
+      }
+    });
+  </script>
+
+</body>
+</html>
